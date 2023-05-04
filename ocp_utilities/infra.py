@@ -9,7 +9,7 @@ from ocp_wrapper_data_collector.data_collector import (
 )
 from simple_logger.logger import get_logger
 from urllib3.exceptions import MaxRetryError
-
+from ocp_utilities.utils import run_command
 from ocp_utilities.exceptions import (
     NodeNotReadyError,
     NodesNotHealthyConditionError,
@@ -288,3 +288,51 @@ def cluster_resource(base_class):
     """
     creator = DynamicClassCreator()
     return creator(base_class=base_class)
+
+
+def create_icsp_command(
+     image, source_url, folder_name, pull_secret=None, filter_options=""
+ ):
+     """
+         Create ImageContentSourcePolicy command.
+ 
+     Args:
+         image (str): name of image to be mirrored.
+         source_url (str): source url of image registry to which contents mirror.
+         folder_name (str): local path to store manifests.
+         pull_secret (str): Path to your registry credentials, default set to None(until passed)
+         filter_options (str): when filter passed it will choose image from multiple variants.
+ 
+     Returns:
+         str: base command to create icsp in the cluster.
+     """
+     base_command = (
+         f"oc adm catalog mirror {image} {source_url} --manifests-only "
+         f"--to-manifests {folder_name} {filter_options}"
+     )
+     if pull_secret:
+         base_command = f"{base_command} --registry-config={pull_secret}"
+     return base_command
+
+
+def generate_icsp_file(folder_name, command):
+     rc, _, _ = run_command(
+         command=shlex.split(command),
+         verify_stderr=False,
+     )
+     assert rc
+ 
+     icsp_file_path = os.path.join(folder_name, ICSP_FILE)
+     assert os.path.isfile(
+         icsp_file_path
+     ), f"ICSP file does not exist in path {icsp_file_path}"
+ 
+     return icsp_file_path
+ 
+ 
+def create_icsp_from_file(icsp_file_path):
+    LOGGER.info(f"Creating icsp using file: {icsp_file_path}")
+    rc, _, _ = run_command(
+        command=shlex.split(f"oc create -f {icsp_file_path}"), verify_stderr=False
+    )
+    assert rc

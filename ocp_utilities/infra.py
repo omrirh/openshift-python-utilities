@@ -8,14 +8,7 @@ import kubernetes
 from ocp_resources.image_content_source_policy import ImageContentSourcePolicy
 from ocp_resources.node import Node
 from ocp_resources.resource import ResourceEditor
-<<<<<<< HEAD
-<<<<<<< HEAD
 from ocp_resources.secret import Secret
-=======
->>>>>>> bd1efc8 (support for updating pull-secrets)
-=======
-from ocp_resources.secret import Secret
->>>>>>> 2aa9872 (supporting existing/non-existing secrets update)
 from ocp_wrapper_data_collector.data_collector import (
     get_data_collector_base_dir,
     get_data_collector_dict,
@@ -366,8 +359,6 @@ def create_icsp(icsp_name, repository_digest_mirrors):
     return icsp
 
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 def dict_base64_encode(_dict):
     """
     Encoding dict in base64
@@ -425,35 +416,3 @@ def create_update_secret(secret_data_dict, name, namespace):
     secret.data_dict = {secret_key: dict_base64_encode(_dict=secret_data_dict)}
 
     return secret.deploy()
-=======
-def update_secret(new_content_dict, secret_name, secret_namespace):
-=======
-def update_pull_secret(new_content_dict, secret_name, secret_namespace):
->>>>>>> 2aa9872 (supporting existing/non-existing secrets update)
-    secret = Secret(name=secret_name, namespace=secret_namespace)
-
-    if secret.exists:
-        secret_data_dict = json.loads(
-            base64.b64decode(secret.instance.data[".dockerconfigjson"])
-        )["auths"]
-        secret_data_dict.update(new_content_dict["auths"])
-        secret_data_dict_encoded = base64.b64encode(
-            json.dumps({"auths": secret_data_dict}).encode("ascii")
-        ).decode("utf-8")
-
-        ResourceEditor(
-            patches={secret: {"data": {".dockerconfigjson": secret_data_dict_encoded}}}
-        ).update()
-    else:
-        secret_data_encoded = base64.b64encode(
-            json.dumps(new_content_dict).encode("ascii")
-        ).decode("utf-8")
-        with cluster_resource(Secret)(
-            name=secret_name,
-            namespace=secret_namespace,
-            data_dict={".dockerconfigjson": secret_data_encoded},
-        ) as secret:
-            secret.deploy()
-
-    return secret
->>>>>>> bd1efc8 (support for updating pull-secrets)

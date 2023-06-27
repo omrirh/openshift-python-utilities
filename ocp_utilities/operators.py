@@ -169,6 +169,10 @@ def install_operator(
             raise ValueError("source must be provided if not using iib_index_image")
 
     operator_namespace = operator_namespace or name
+
+    if name == "nfd":
+        target_namespaces = [operator_namespace]
+
     if target_namespaces:
         for namespace in target_namespaces:
             ns = Namespace(client=admin_client, name=namespace)

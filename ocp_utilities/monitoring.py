@@ -11,6 +11,7 @@ from simple_logger.logger import get_logger
 
 from ocp_utilities.infra import get_client
 
+
 TIMEOUT_2MIN = 2 * 60
 TIMEOUT_10MIN = 10 * 60
 
@@ -31,12 +32,12 @@ class Prometheus(object):
     """
 
     def __init__(
-        self,
-        namespace="openshift-monitoring",
-        resource_name="prometheus-k8s",
-        client=None,
-        verify_ssl=True,
-        bearer_token=None,
+            self,
+            namespace="openshift-monitoring",
+            resource_name="prometheus-k8s",
+            client=None,
+            verify_ssl=True,
+            bearer_token=None,
     ):
         """
         Args:

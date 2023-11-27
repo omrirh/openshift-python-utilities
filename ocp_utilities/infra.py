@@ -124,7 +124,7 @@ def assert_pods_failed_or_pending(pods):
     if failed_or_pending_pods:
         failed_or_pending_pods_str = "\t".join(map(str, failed_or_pending_pods))
         raise PodsFailedOrPendingError(
-            "The following pods are failed or pending:\n\t{failed_or_pending_pods_str}",
+            f"The following pods are failed or pending:\n\t{failed_or_pending_pods_str}",
         )
 
 

@@ -41,11 +41,11 @@ class Prometheus(object):
     ):
         """
         Args:
-            namespace: Prometheus API resource namespace
-            resource_name: Prometheus API resource name
-            client: Admin client resource
-            verify_ssl: Perform SSL verification on query
-            bearer_token: Used for query OAuth with API endpoint
+            namespace (str): Prometheus API resource namespace
+            resource_name (str): Prometheus API resource name
+            client (DynamicClient): Admin client resource
+            verify_ssl (bool): Perform SSL verification on query
+            bearer_token (str): Used for query OAuth with API endpoint
         """
         self.namespace = namespace
         self.resource_name = resource_name

@@ -32,12 +32,12 @@ class Prometheus(object):
     """
 
     def __init__(
-            self,
-            namespace="openshift-monitoring",
-            resource_name="prometheus-k8s",
-            client=None,
-            verify_ssl=True,
-            bearer_token=None,
+        self,
+        namespace="openshift-monitoring",
+        resource_name="prometheus-k8s",
+        client=None,
+        verify_ssl=True,
+        bearer_token=None,
     ):
         """
         Args:
